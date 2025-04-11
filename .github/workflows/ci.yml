@@ -9,7 +9,7 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     env:
-      DOCKER_IMAGE_NAME: /sample-flask # Define your Docker Hub image name here
+      DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/sample-flask # Define your Docker Hub image name here
 
     steps:
       - name: Checkout code

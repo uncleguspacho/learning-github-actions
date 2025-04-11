@@ -1,0 +1,29 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - '**' # Trigger on any branch push
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Log in to GitLab Container Registry
+      - name: Log in to GitLab Container Registry
+        run: echo "${{ secrets.GITLAB_TOKEN }}" | docker login ${{ secrets.GITLAB_REGISTRY }} -u ${{ secrets.GITLAB_USERNAME }} --password-stdin
+
+      # Build the Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.GITLAB_REGISTRY }}/${{ secrets.GITLAB_PROJECT }}:latest .
+
+      # Push the Docker image to GitLab Container Registry
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.GITLAB_REGISTRY }}/${{ secrets.GITLAB_PROJECT }}:latest
